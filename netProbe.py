@@ -34,27 +34,28 @@ def get_gateway_ip(interface):
                 break
     return gateway_ip
 
-# Lấy Địa chỉ IP của router hoặc dải mạng cần quét
-interface = input("Write the interface you want to scan (e.g., eth0, Vmnet8, vboxnet0, or Wi-Fi): ")
+def main():
+    
+    # Lấy Địa chỉ IP của router hoặc dải mạng cần quét
+    interface = input("Write the interface you want to scan (e.g., eth0, Vmnet8, vboxnet0, or Wi-Fi): ")
 
-# Lấy địa chỉ IP của gateway/router
-router_ip = get_gateway_ip(interface)
-
-if os.name == 'posix':
-    myip = os.popen("ifconfig " + interface + " | grep \"inet \" | awk \'{print $2}\'").read().replace("\n", "")
-# Window
-elif os.name == 'nt':
-    output = os.popen("ipconfig").read()
-    myip = output[output.index(interface):].split("IPv4 Address")[1].split(": ")[1].split("\n")[0]
-
-
-if router_ip:
-    print("Router IP:", router_ip)
-    scan_network(router_ip + '/24')
-else:
-    print("Unable to determine the gateway IP.")
-    scan_network(myip + '/24')  
+    # Lấy địa chỉ IP của gateway/router
+    router_ip = get_gateway_ip(interface)
+    #Linux
+    if os.name == 'posix':
+        myip = os.popen("ifconfig " + interface + " | grep \"inet \" | awk \'{print $2}\'").read().replace("\n", "")
+    # Window
+    elif os.name == 'nt':
+        output = os.popen("ipconfig").read()
+        myip = output[output.index(interface):].split("IPv4 Address")[1].split(": ")[1].split("\n")[0]
 
 
+    if router_ip:
+        print("Router IP:", router_ip)
+        scan_network(router_ip + '/24')
+    else:
+        print("Unable to determine the gateway IP.")
+        scan_network(myip + '/24')  
 
-
+if __name__ == "__main__":
+    main()
