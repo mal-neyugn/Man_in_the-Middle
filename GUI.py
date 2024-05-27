@@ -1,6 +1,7 @@
 import netProbe
 import arpSpoof
-import time
+import controlPacket
+
 
 def main():
     while(True):
@@ -16,7 +17,8 @@ def main():
               
             ----- DASHBOARD -----
               1. Network Probe
-              2. ARP Spoof
+              2. ARP Spoof 
+              3. Control Packet
               999. Thoát chương trình
               """)
         options = int(input("Lựa chọn option:  "))
@@ -24,6 +26,8 @@ def main():
             netProbe.main()
         elif(options == 2):
             arpSpoof.main()
+        elif(options ==3):
+            controlPacket.main()
         elif(options == 999):
             exit()
 
