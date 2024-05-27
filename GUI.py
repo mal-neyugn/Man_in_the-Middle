@@ -1,9 +1,19 @@
+#!/usr/bin/env python3
+
 import netProbe
 import arpSpoof
 import controlPacket
+import os
+import sys
+
+def checkRoot():
+    if os.geteuid() != 0:
+        print("This file must be run as root. !")
+        sys.exit(1)
 
 
 def main():
+    checkRoot()
     while(True):
 
         print("""  
@@ -18,7 +28,7 @@ def main():
             ----- DASHBOARD -----
               1. Network Probe
               2. ARP Spoof 
-              3. Control Packet
+              3. Control Packet 
               999. Thoát chương trình
               """)
         options = int(input("Lựa chọn option:  "))
