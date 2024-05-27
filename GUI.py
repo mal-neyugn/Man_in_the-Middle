@@ -3,17 +3,21 @@
 import netProbe
 import arpSpoof
 import controlPacket
-import os
-import sys
+import netSniff
+import os 
 
-def checkRoot():
-    if os.geteuid() != 0:
-        print("This file must be run as root. !")
-        sys.exit(1)
+
+
+def check_root_privileges():
+    if os.name != 'nt' and os.geteuid() != 0:
+        print("You need to run this script as root.\n")
+        exit()
 
 
 def main():
-    checkRoot()
+
+    check_root_privileges()
+    
     while(True):
 
         print("""  
@@ -28,8 +32,9 @@ def main():
             ----- DASHBOARD -----
               1. Network Probe
               2. ARP Spoof 
-              3. Control Packet 
-              999. Thoát chương trình
+              3. Control Packet
+              4. Net Sniff
+              999. Exit
               """)
         options = int(input("Lựa chọn option:  "))
         if(options == 1):
@@ -38,6 +43,8 @@ def main():
             arpSpoof.main()
         elif(options ==3):
             controlPacket.main()
+        elif(options == 4):
+            netSniff.main()
         elif(options == 999):
             exit()
 
