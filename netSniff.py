@@ -18,7 +18,7 @@ class NetSniff:
             self.sniffing = False
 
     def process_packet(self, packet):
-        try: 
+        try:
             # Display basic packet information with details
             print("\n[+] Packet captured:")
             if packet.haslayer(Ether):
@@ -51,7 +51,7 @@ class NetSniff:
                 print(f"    DNS Packet: ID: {dns.id}, QD: {dns.qdcount}, AN: {dns.ancount}, NS: {dns.nscount}, AR: {dns.arcount}")
         except Exception as e:
             print(f"Error processing packet: {e}")
-            
+
     def stop_sniffing(self):
         self.sniffing = False
         print("Sniffing stopped.")
@@ -72,20 +72,15 @@ def listen_for_exit(sniffer):
             break
 
 def main():
-    import argparse
-
-    parser = argparse.ArgumentParser(description="Network Sniffing Module")
-    parser.add_argument("-i", "--interface", help="Network interface to sniff on", required=True)
-    parser.add_argument("-f", "--filter", help="BPF filter for packet sniffing", required=False)
-
-    args = parser.parse_args()
-
     check_root_privileges()
 
     if os.name == 'nt':
         conf.use_pcap = True
 
-    sniffer = NetSniff(interface=args.interface, filter=args.filter)
+    interface = input("Enter the network interface to sniff on: ").strip()
+    filter = input("Enter the BPF filter for packet sniffing (press Enter to skip): ").strip() or None
+
+    sniffer = NetSniff(interface=interface, filter=filter)
 
     exit_listener_thread = threading.Thread(target=listen_for_exit, args=(sniffer,))
     exit_listener_thread.daemon = True
