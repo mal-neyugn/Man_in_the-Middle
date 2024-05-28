@@ -35,7 +35,6 @@ def get_gateway_ip(interface):
     return gateway_ip
 
 def main():
-    
     # Lấy Địa chỉ IP của router hoặc dải mạng cần quét
     interface = input("Write the interface you want to scan (e.g., eth0, Vmnet8, vboxnet0, or Wi-Fi): ")
 
