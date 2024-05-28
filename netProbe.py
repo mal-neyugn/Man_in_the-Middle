@@ -22,7 +22,7 @@ def scan_network(ip_range):
 def get_gateway_ip(interface):
     gateway_ip = None
     if os.name == 'posix':
-        cmd = "ip route show | grep " + interface + " | awk '{print $3}'"
+        cmd = f"ip route show | grep {interface} | grep default | awk '{{print $3}}'"
         gateway_ip = os.popen(cmd).read().strip()
     elif os.name == 'nt':
         output = os.popen("route print -4").read()
@@ -34,27 +34,37 @@ def get_gateway_ip(interface):
                 break
     return gateway_ip
 
+def get_my_ip(interface):
+    my_ip = None
+    if os.name == 'posix':
+        cmd = f"ifconfig {interface} | grep 'inet ' | awk '{{print $2}}'"
+        my_ip = os.popen(cmd).read().strip()
+    elif os.name == 'nt':
+        output = os.popen("ipconfig").read()
+        if interface in output:
+            start = output.index(interface)
+            my_ip_section = output[start:].split('IPv4 Address')[1].split(': ')[1]
+            my_ip = my_ip_section.split('\n')[0].strip()
+    return my_ip
+
 def main():
-    # Lấy Địa chỉ IP của router hoặc dải mạng cần quét
+    # Lấy tên giao diện mạng từ người dùng
     interface = input("Write the interface you want to scan (e.g., eth0, Vmnet8, vboxnet0, or Wi-Fi): ")
 
     # Lấy địa chỉ IP của gateway/router
     router_ip = get_gateway_ip(interface)
-    #Linux
-    if os.name == 'posix':
-        myip = os.popen("ifconfig " + interface + " | grep \"inet \" | awk \'{print $2}\'").read().replace("\n", "")
-    # Window
-    elif os.name == 'nt':
-        output = os.popen("ipconfig").read()
-        myip = output[output.index(interface):].split("IPv4 Address")[1].split(": ")[1].split("\n")[0]
 
+    # Lấy địa chỉ IP của máy
+    my_ip = get_my_ip(interface)
 
     if router_ip:
         print("Router IP:", router_ip)
         scan_network(router_ip + '/24')
+    elif my_ip:
+        print("My IP:", my_ip)
+        scan_network(my_ip + '/24')
     else:
-        print("Unable to determine the gateway IP.")
-        scan_network(myip + '/24')  
+        print("Unable to determine the gateway IP or your IP.")
 
 if __name__ == "__main__":
     main()
