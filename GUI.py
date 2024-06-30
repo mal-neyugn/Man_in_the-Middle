@@ -34,6 +34,7 @@ def main():
               2. ARP Spoof 
               3. Control Packet
               4. Net Sniff
+              5. Modify Packet
               999. Exit
               """)
         options = int(input("Lựa chọn option:  "))

