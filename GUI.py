@@ -5,7 +5,7 @@ import arpSpoof
 import controlPacket
 import netSniff
 import os 
-
+import modifyPacket
 
 
 def check_root_privileges():
@@ -45,6 +45,8 @@ def main():
             controlPacket.main()
         elif(options == 4):
             netSniff.main()
+        elif(options == 5):
+            modifyPacket.main()
         elif(options == 999):
             exit()
 
